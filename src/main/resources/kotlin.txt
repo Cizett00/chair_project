@@ -1,0 +1,21 @@
+val url = "http://<spring-server-ip>:8080/api/statistics"
+val request = Request.Builder().url(url).build()
+
+client.newCall(request).enqueue(object : Callback {
+    override fun onResponse(call: Call, response: Response) {
+        val body = response.body?.string()
+        val json = JSONObject(body)
+
+        val total = json.getInt("total")
+        val good = json.getInt("goodCount")
+        val bad = json.getInt("badCount")
+        val avg = json.getDouble("averageConfidence")
+
+        runOnUiThread {
+            // 앱 화면에 반영 (예: 텍스트뷰, 그래프 등)
+        }
+    }
+    override fun onFailure(call: Call, e: IOException) {
+        // 에러 처리
+    }
+})
