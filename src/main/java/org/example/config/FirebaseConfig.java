@@ -1,0 +1,32 @@
+package org.example.config;
+
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
+
+import java.io.FileInputStream;
+
+@Component
+public class FirebaseConfig {
+
+    @PostConstruct
+    public void initialize() {
+        try {
+            FileInputStream serviceAccount = new FileInputStream("src/main/resources/firebase-service-key.json");
+
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://userdata-ecc36-default-rtdb.asia-southeast1.firebasedatabase.app/")  // ← 여기를 본인 URL로 수정
+                    .build();
+
+            if (FirebaseApp.getApps().isEmpty()) {
+                FirebaseApp.initializeApp(options);
+                System.out.println("✅ Firebase 초기화 완료");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
